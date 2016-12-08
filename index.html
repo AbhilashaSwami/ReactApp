@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="bower_components/react/react.min.js"></script>
+        <script src="bower_components/react/react-dom.min.js"></script>
+        <script src="bower_components/babel/browser.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body
+        <div id="container"></div>
+            <script type="text/babel">
+                    
+                     
+                     var Heading = React.createClass
+                     ({
+                          render: function(){
+                            return(
+                              <h3>What you want to add in the List?</h3>
+                            );
+                          }
+                     });
+
+                        
+                        
+                        var List = React.createClass({
+                          render: function() {
+                          var createItem = function(itemText) {
+                            return (
+                                <ListItem>{itemText}</ListItem>
+                              );
+                          };
+                          return <ul>{this.props.items.map(createItem)}</ul>;
+                          }
+                        });
+                        
+
+                        var ListItem= React.createClass
+                        ({
+                            getInitialState: function() 
+                            {
+                                return {
+                                    isSelected: false
+                                };
+                            },
+                            onChecked: function()
+                            {
+                                this.setState({
+                                isSelected: !this.state.isSelected
+                                });
+                            },
+                            render: function()
+                            {
+                                var isSelected = this.state.isSelected;
+                                if (isSelected) 
+                                {
+                                    return (<li><input type="checkbox" name="list" onChange={this.onChecked}  /><strike>{this.props.children} </strike></li>);
+                            
+                                }
+                                else{
+                                return (<li><input type="checkbox" name="list" onChange={this.onChecked}  />{this.props.children} </li>);
+                            
+                                }
+                                }
+                        });
+                        
+
+                        var Submitform = React.createClass({
+                          getInitialState: function() {
+                            return {item: ''};
+                            },
+                          handleSubmit: function(e){
+                            e.preventDefault();
+                            this.props.onFormSubmit(this.state.item);
+                            this.setState({item: ''});
+                            return;
+                          },
+                          onChange: function(e){
+                            this.setState({
+                              item: e.target.value
+                            });
+                          },
+                          render: function(){
+                            return (
+                              <form onSubmit={this.handleSubmit}>
+                                <input type='text' ref='item' onChange={this.onChange} value={this.state.item}/>
+                                <input type='submit' value='Add'/>
+                              </form>
+                            );
+                          }
+                        });        
+                        
+                        
+                        var App = React.createClass({
+                          getInitialState: function() {
+                          return {items: []};
+                          },
+                          updateItems: function(newItem) {
+                            var allItems = this.state.items.concat([newItem]);
+                            this.setState({
+                            items: allItems
+                          });
+                          },
+                          render: function() {
+                          return (
+                            <div>
+                            <Heading/>
+                            
+                            <Submitform onFormSubmit={this.updateItems}/>
+                            <List items={this.state.items}/>
+                            </div>
+                          );
+                          }
+                        });
+                        
+
+                        ReactDOM.render(<App/>, document.getElementById('container'));
+            </script>
+    </body>
+</html>
